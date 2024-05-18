@@ -7,21 +7,17 @@ import '../styles/login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+export default function Register() {
     const navigate = useNavigate();
-    const [login, setlogin] = useState({ email: "", password: "" });
+    const [register, setregister] = useState({ name: "", email: "", password: "" });
     const chnageHandler = (e) => {
-        setlogin({ ...login, [e.target.name]: e.target.value });
+        setregister({ ...register, [e.target.name]: e.target.value });
     }
     const submitHandler = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/login', login).then(res => {localStorage.setItem("usertoken", res.data.token); navigate('/')}).catch((err) => {
-            if (err.response.status === 404) {
-                alert(err.response.data);
-                return navigate('/register');
-            }
-            else if(err.response.status === 405) {
-                alert("incorrect password");
+        axios.post('http://localhost:5000/register', register).then(res => {alert(res.data.message); return navigate('/login')}).catch((err) => {
+            if(err.response.status === 405) {
+                alert(err.response.data.message);
             }
         });
     }
@@ -37,9 +33,13 @@ export default function Login() {
                 <div className="login2">
                     <div className="formswrap">
                         <h2 className='loginlogo'><img className='logoimg' src={logo} alt="" /></h2>
-                        <h2 className='loginheader'>Login</h2>
+                        <h2 className='loginheader'>Register</h2>
                         <div className="loginlaert">Enter Your credential to login the platform</div>
                         <form onSubmit={submitHandler} className='loginforms'>
+                            <div className="inputdivslogin">
+                                <label className='loginlabels' htmlFor="email">Name</label>
+                                <input onChange={chnageHandler} className='logininputs loginipt' type="text" name='name' placeholder='Enter here' />
+                            </div>
                             <div className="inputdivslogin">
                                 <label className='loginlabels' htmlFor="email">E-mail</label>
                                 <input onChange={chnageHandler} className='logininputs loginipt' type="text" name='email' placeholder='Enter here' />

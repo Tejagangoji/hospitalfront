@@ -7,7 +7,7 @@ import '../styles/login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+export default function AdminLogin() {
     const navigate = useNavigate();
     const [login, setlogin] = useState({ email: "", password: "" });
     const chnageHandler = (e) => {
@@ -15,13 +15,9 @@ export default function Login() {
     }
     const submitHandler = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/login', login).then(res => {localStorage.setItem("usertoken", res.data.token); navigate('/')}).catch((err) => {
-            if (err.response.status === 404) {
-                alert(err.response.data);
-                return navigate('/register');
-            }
-            else if(err.response.status === 405) {
-                alert("incorrect password");
+        axios.post('http://localhost:5000/adminlogin', login).then(res => { localStorage.setItem("admintoken", res.data.token); navigate('/admin') }).catch((err) => {
+            if (err.response.status === 405) {
+                alert("incorrect email/password");
             }
         });
     }
@@ -37,7 +33,7 @@ export default function Login() {
                 <div className="login2">
                     <div className="formswrap">
                         <h2 className='loginlogo'><img className='logoimg' src={logo} alt="" /></h2>
-                        <h2 className='loginheader'>Login</h2>
+                        <h2 className='loginheader'>Admin Login</h2>
                         <div className="loginlaert">Enter Your credential to login the platform</div>
                         <form onSubmit={submitHandler} className='loginforms'>
                             <div className="inputdivslogin">
@@ -48,10 +44,8 @@ export default function Login() {
                                 <label className='loginlabels' htmlFor="password">Password</label>
                                 <input onChange={chnageHandler} className='logininputs loginipt' type="text" name='password' placeholder='Enter here' />
                             </div>
-                            <div className='loginforgot'>forgot password?</div>
-                            <input className='logininputs loginsubmit' type="submit" value="Login" />
+                            <input style={{ marginBottom: "1.5rem" }} className='logininputs loginsubmit' type="submit" value="Login" />
                         </form>
-                        <div className="loginrediect">No Account? <span className='logintoregister'>Sign up</span></div>
                     </div>
                 </div>
             </div>
